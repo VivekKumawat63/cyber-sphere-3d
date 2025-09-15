@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Shield, Menu, X, ChevronDown } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -14,6 +15,8 @@ import {
 const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,15 +27,28 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavigation = (href: string) => {
+    if (href.startsWith('#')) {
+      // Handle scroll to section
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(href);
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   const navigationItems = [
     {
       title: 'Courses',
       href: '/courses',
       items: [
-        { title: 'Ethical Hacking', href: '/courses/ethical-hacking', description: 'Master ethical penetration testing' },
-        { title: 'PenTesting', href: '/courses/pentesting', description: 'Real-world vulnerability assessment' },
-        { title: 'Cloud Security', href: '/courses/cloud-security', description: 'Secure cloud environments' },
-        { title: 'Digital Forensics', href: '/courses/digital-forensics', description: 'Investigate cybercrimes' },
+        { title: 'Ethical Hacking', href: '/courses#ethical-hacking', description: 'Master ethical penetration testing' },
+        { title: 'PenTesting', href: '/courses#pentesting', description: 'Real-world vulnerability assessment' },
+        { title: 'Cloud Security', href: '/courses#cloud-security', description: 'Secure cloud environments' },
+        { title: 'Digital Forensics', href: '/courses#digital-forensics', description: 'Investigate cybercrimes' },
       ]
     },
     { title: 'About', href: '/about' },
@@ -53,15 +69,17 @@ const Navigation: React.FC = () => {
     >
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <motion.div
-          className="flex items-center space-x-2"
-          whileHover={{ scale: 1.05 }}
-        >
-          <Shield className="h-8 w-8 text-primary animate-glow" />
-          <span className="font-orbitron text-xl font-bold text-gradient">
-            CyberSecure Academy
-          </span>
-        </motion.div>
+        <Link to="/">
+          <motion.div
+            className="flex items-center space-x-2"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Shield className="h-8 w-8 text-primary animate-glow" />
+            <span className="font-orbitron text-xl font-bold text-gradient">
+              CyberSecure Academy
+            </span>
+          </motion.div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
@@ -77,10 +95,10 @@ const Navigation: React.FC = () => {
                       <NavigationMenuContent>
                         <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                           {item.items.map((subItem) => (
-                            <NavigationMenuLink
+                            <div
                               key={subItem.title}
-                              href={subItem.href}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-accent-foreground focus:bg-muted focus:text-accent-foreground cyber-border"
+                              onClick={() => handleNavigation(subItem.href)}
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-accent-foreground focus:bg-muted focus:text-accent-foreground cyber-border cursor-pointer"
                             >
                               <div className="text-sm font-medium leading-none font-rajdhani text-primary">
                                 {subItem.title}
@@ -88,18 +106,18 @@ const Navigation: React.FC = () => {
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                                 {subItem.description}
                               </p>
-                            </NavigationMenuLink>
+                            </div>
                           ))}
                         </div>
                       </NavigationMenuContent>
                     </>
                   ) : (
-                    <NavigationMenuLink
-                      href={item.href}
-                      className="font-rajdhani text-foreground hover:text-primary transition-colors"
+                    <div
+                      onClick={() => handleNavigation(item.href)}
+                      className="font-rajdhani text-foreground hover:text-primary transition-colors cursor-pointer"
                     >
                       {item.title}
-                    </NavigationMenuLink>
+                    </div>
                   )}
                 </NavigationMenuItem>
               ))}
@@ -109,10 +127,18 @@ const Navigation: React.FC = () => {
 
         {/* CTA Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" className="font-rajdhani">
+          <Button 
+            variant="ghost" 
+            className="font-rajdhani"
+            onClick={() => navigate('/login')}
+          >
             Login
           </Button>
-          <Button variant="default" className="cyber-glow font-rajdhani">
+          <Button 
+            variant="default" 
+            className="cyber-glow font-rajdhani"
+            onClick={() => navigate('/courses')}
+          >
             Enroll Now
           </Button>
         </div>
@@ -143,32 +169,40 @@ const Navigation: React.FC = () => {
           <div className="container mx-auto px-4 py-4 space-y-4">
             {navigationItems.map((item) => (
               <div key={item.title}>
-                <a
-                  href={item.href}
-                  className="block py-2 font-rajdhani text-foreground hover:text-primary transition-colors"
+                <div
+                  onClick={() => handleNavigation(item.href)}
+                  className="block py-2 font-rajdhani text-foreground hover:text-primary transition-colors cursor-pointer"
                 >
                   {item.title}
-                </a>
+                </div>
                 {item.items && (
                   <div className="ml-4 space-y-2">
                     {item.items.map((subItem) => (
-                      <a
+                      <div
                         key={subItem.title}
-                        href={subItem.href}
-                        className="block py-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        onClick={() => handleNavigation(subItem.href)}
+                        className="block py-1 text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
                       >
                         {subItem.title}
-                      </a>
+                      </div>
                     ))}
                   </div>
                 )}
               </div>
             ))}
             <div className="pt-4 border-t border-border space-y-2">
-              <Button variant="ghost" className="w-full font-rajdhani">
+              <Button 
+                variant="ghost" 
+                className="w-full font-rajdhani"
+                onClick={() => navigate('/login')}
+              >
                 Login
               </Button>
-              <Button variant="default" className="w-full cyber-glow font-rajdhani">
+              <Button 
+                variant="default" 
+                className="w-full cyber-glow font-rajdhani"
+                onClick={() => navigate('/courses')}
+              >
                 Enroll Now
               </Button>
             </div>

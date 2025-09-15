@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, Box } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import cyberHeroBg from '@/assets/cyber-hero-bg.jpg';
 
@@ -149,9 +150,17 @@ const Scene3D: React.FC<{ onPanelClick: (panel: string) => void }> = ({ onPanelC
 };
 
 const Hero3D: React.FC = () => {
+  const navigate = useNavigate();
+  
   const handlePanelClick = (panelId: string) => {
-    console.log(`Clicked panel: ${panelId}`);
-    // TODO: Navigate to specific course page
+    navigate(`/courses#${panelId}`);
+  };
+
+  const scrollToAbout = () => {
+    const aboutSection = document.querySelector('#about-section');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -195,10 +204,20 @@ const Hero3D: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="default" size="lg" className="cyber-glow font-rajdhani text-lg px-8 py-6">
+            <Button 
+              variant="default" 
+              size="lg" 
+              className="cyber-glow font-rajdhani text-lg px-8 py-6"
+              onClick={() => navigate('/courses')}
+            >
               Start Your Journey
             </Button>
-            <Button variant="outline" size="lg" className="cyber-border font-rajdhani text-lg px-8 py-6">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="cyber-border font-rajdhani text-lg px-8 py-6"
+              onClick={scrollToAbout}
+            >
               Explore Courses
             </Button>
           </div>

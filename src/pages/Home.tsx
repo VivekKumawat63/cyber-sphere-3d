@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 import { 
   Shield, 
   Code, 
@@ -18,6 +19,7 @@ import {
 import Hero3D from '@/components/Hero3D';
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const features = [
     {
       icon: Code,
@@ -110,7 +112,7 @@ const Home: React.FC = () => {
       <Hero3D />
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-glow">
+      <section id="about-section" className="py-20 bg-gradient-glow">
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
@@ -205,7 +207,11 @@ const Home: React.FC = () => {
                           <span className="text-foreground">{course.students}</span>
                         </div>
                       </div>
-                      <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                      <Button 
+                        variant="outline" 
+                        className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all"
+                        onClick={() => navigate(`/courses#${course.title.toLowerCase().replace(' ', '-')}`)}
+                      >
                         Learn More
                         <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -217,7 +223,12 @@ const Home: React.FC = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="cyber" size="lg" className="font-rajdhani text-lg px-8 py-6">
+            <Button 
+              variant="cyber" 
+              size="lg" 
+              className="font-rajdhani text-lg px-8 py-6"
+              onClick={() => navigate('/courses')}
+            >
               <Play className="h-5 w-5 mr-2" />
               View All Courses
             </Button>
@@ -297,11 +308,21 @@ const Home: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button variant="cyber" size="lg" className="font-rajdhani text-lg px-8 py-6">
+              <Button 
+                variant="cyber" 
+                size="lg" 
+                className="font-rajdhani text-lg px-8 py-6"
+                onClick={() => navigate('/signup')}
+              >
                 <Shield className="h-5 w-5 mr-2" />
                 Start Free Trial
               </Button>
-              <Button variant="outline" size="lg" className="font-rajdhani text-lg px-8 py-6">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="font-rajdhani text-lg px-8 py-6"
+                onClick={() => navigate('/contact')}
+              >
                 Schedule Demo
               </Button>
             </div>
